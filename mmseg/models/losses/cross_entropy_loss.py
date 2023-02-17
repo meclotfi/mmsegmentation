@@ -1,6 +1,9 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import warnings
 
+# Copyright (c) OpenMMLab. All rights reserved.
+import warnings
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -12,13 +15,12 @@ from .utils import get_class_weight, weight_reduce_loss
 def cross_entropy(pred,
                   label,
                   weight=None,
-                  class_weight=None,
+                  class_weight=[0.01,0.33,0.33,0.33],
                   reduction='mean',
                   avg_factor=None,
                   ignore_index=-100,
                   avg_non_ignore=False):
     """cross_entropy. The wrapper function for :func:`F.cross_entropy`
-
     Args:
         pred (torch.Tensor): The prediction with shape (N, 1).
         label (torch.Tensor): The learning label of the prediction.
@@ -96,7 +98,6 @@ def binary_cross_entropy(pred,
                          avg_non_ignore=False,
                          **kwargs):
     """Calculate the binary CrossEntropy loss.
-
     Args:
         pred (torch.Tensor): The prediction with shape (N, 1).
         label (torch.Tensor): The learning label of the prediction.
@@ -111,7 +112,6 @@ def binary_cross_entropy(pred,
         avg_non_ignore (bool): The flag decides to whether the loss is
             only averaged over non-ignored targets. Default: False.
             `New in version 0.23.0.`
-
     Returns:
         torch.Tensor: The calculated loss
     """
@@ -163,7 +163,6 @@ def mask_cross_entropy(pred,
                        ignore_index=None,
                        **kwargs):
     """Calculate the CrossEntropy loss for masks.
-
     Args:
         pred (torch.Tensor): The prediction with shape (N, C), C is the number
             of classes.
@@ -179,7 +178,6 @@ def mask_cross_entropy(pred,
         class_weight (list[float], optional): The weight for each class.
         ignore_index (None): Placeholder, to be consistent with other loss.
             Default: None.
-
     Returns:
         torch.Tensor: The calculated loss
     """
@@ -196,7 +194,6 @@ def mask_cross_entropy(pred,
 @LOSSES.register_module()
 class CrossEntropyLoss(nn.Module):
     """CrossEntropyLoss.
-
     Args:
         use_sigmoid (bool, optional): Whether the prediction uses sigmoid
             instead of softmax. Defaults to False.
@@ -283,13 +280,11 @@ class CrossEntropyLoss(nn.Module):
     @property
     def loss_name(self):
         """Loss Name.
-
         This function must be implemented and will return the name of this
         loss function. This name will be used to combine different loss items
         by simple sum operation. In addition, if you want this loss item to be
         included into the backward graph, `loss_` must be the prefix of the
         name.
-
         Returns:
             str: The name of this loss item.
         """
